@@ -1,0 +1,12 @@
+apiVersion: example.com/v1alpha
+kind: Mirror
+metadata:
+  name: nginx 
+spec:
+  source:
+    registry: dockerhub.io
+    image: nginx/nginx
+    tags: ["v1.0.0", "v1.1.1"]
+  destination:
+    registry: gcr.io/mirror
+
