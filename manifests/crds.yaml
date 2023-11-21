@@ -36,5 +36,41 @@ spec:
                 properties:
                   registry:
                     type: string
+          status:
+            type: object
+            properties:
+              source:
+                type: string
+              state:
+                type: string
+              lastSync:
+                type: string
+        required:
+        - spec
+    additionalPrinterColumns:
+    - name: Source
+      type: string
+      description: Source registry address from which the image is mirrored
+      jsonPath: .spec.source.registry
+    - name: Image
+      type: string
+      description: Source image name
+      jsonPath: .spec.source.image
+    - name: Tags
+      type: string
+      description: Tags that are synced
+      jsonPath: .spec.source.tags
+    - name: Destination
+      type: string
+      description: Destination registry address
+      jsonPath: .spec.destination.registry
+    - name: State
+      type: string
+      description: Status of the sync
+      jsonPath: .status.mirrored
+    - name: LastSync
+      type: date
+      description: Last time the mirror was done
+      jsonPath: .status.lastSync
     subresources:
      status: {}
