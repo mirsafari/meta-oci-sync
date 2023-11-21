@@ -1,12 +1,15 @@
-FROM golang:1.21
+FROM golang:1.21 AS build-stage
 
-WORKDIR /usr/src/app
+WORKDIR /go/src/app
 
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
 COPY go.mod go.sum ./
-RUN go mod download && go mod verify
+RUN go mod download
+COPY . ./
 
-COPY . .
-RUN go build -v -o /usr/local/bin/app ./...
+RUN CGO_ENABLED=0 GOOS=linux go build -o /controller
 
-CMD ["app"]
+# Second stage - minimal image
+FROM scratch
+WORKDIR /
+COPY --from=build-stage /controller /controller
+ENTRYPOINT ["/controller"]
