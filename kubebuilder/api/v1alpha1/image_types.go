@@ -34,7 +34,7 @@ type ImageSpec struct {
 	//+kubebuilder:validation:MinLength=0
 	// SourceImage defines the image that should be mirrored
 	SourceImage string `json:"sourceImage"`
-	//+kubebuilder:validation:MinLength=0
+	//+kkubebuilder:validation:MaxItems=10
 	// SourceImageTags specifies all the tags that should be mirrored for a given image
 	SourceImageTags []string `json:"sourceImageTags"`
 	//+kubebuilder:validation:MinLength=0

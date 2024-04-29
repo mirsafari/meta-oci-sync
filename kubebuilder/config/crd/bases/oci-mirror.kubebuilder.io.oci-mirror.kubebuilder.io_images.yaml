@@ -1,0 +1,95 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+  name: images.oci-mirror.kubebuilder.io.oci-mirror.kubebuilder.io
+spec:
+  group: oci-mirror.kubebuilder.io.oci-mirror.kubebuilder.io
+  names:
+    kind: Image
+    listKind: ImageList
+    plural: images
+    singular: image
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Image is the Schema for the images API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageSpec defines the desired state of Image
+            properties:
+              RetryInterval:
+                description: RetryInterval specifies how long to wait between syncs
+                  that have errors.
+                minLength: 0
+                type: string
+              checkInterval:
+                description: CheckInterval specifies how often will the DestinationRegistry
+                  be queried to detect drift (missing image).
+                minLength: 0
+                type: string
+              destinationRegistry:
+                description: DestinationRegistry specifies location TO which the image
+                  should be mirrored
+                minLength: 0
+                type: string
+              sourceImage:
+                description: SourceImage defines the image that should be mirrored
+                minLength: 0
+                type: string
+              sourceImageTags:
+                description: SourceImageTags specifies all the tags that should be
+                  mirrored for a given image
+                items:
+                  type: string
+                type: array
+              sourceRegistry:
+                description: SourceRegistry defines location FROM which the image
+                  should be mirrored
+                minLength: 5
+                type: string
+            required:
+            - destinationRegistry
+            - sourceImage
+            - sourceImageTags
+            - sourceRegistry
+            type: object
+          status:
+            description: ImageStatus defines the observed state of Image
+            properties:
+              lastMirrorTime:
+                description: Information when was the last time the mirror was successfully
+                  executed.
+                format: date-time
+                type: string
+              mirroredState:
+                description: MirroredState describes the state of the syncing process.
+                  Only one of the following states can be be specified. If none of
+                  the following policies is specified, the default one is Pending.
+                enum:
+                - Allow
+                - Forbid
+                - Replace
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
